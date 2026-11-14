@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Empresa Automática</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%232456d6'/%3E%3Cpath d='M32 0v24a8 8 0 0 1-8 8H0z' fill='%2317794a'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="/estatico/estilo.css">
+</head>
+<body>
+  <header class="topo">
+    <div class="marca">
+      <span class="logo" aria-hidden="true"></span>
+      <div>
+        <div class="titulo-app">Empresa Automática</div>
+        <div class="subtitulo" id="subtitulo">Agente autônomo com modelo local</div>
+      </div>
+    </div>
+    <div class="topo-direita">
+      <span class="selo" id="selo-llm" title="Modelo de linguagem local">modelo</span>
+      <span class="selo" id="selo-estado">conectando</span>
+      <button class="botao secundario" id="botao-pausa" hidden>Pausar</button>
+    </div>
+  </header>
+
+  <!-- Tela de partida: única decisão que o dono toma -->
+  <main class="partida" id="tela-partida" hidden>
+    <h1>Como a empresa deve começar?</h1>
+    <p class="apoio">Esta é a única decisão que você toma. A partir daqui o agente pesquisa o mercado, define o
+      negócio, constrói o produto, publica e opera a empresa sozinho, 24 horas por dia.</p>
+    <div class="opcoes">
+      <section class="cartao opcao">
+        <h2>Tenho uma ideia</h2>
+        <p>Descreva a empresa em uma única mensagem. O agente investiga o mercado dessa ideia e toma todas as
+          decisões seguintes.</p>
+        <textarea id="campo-ideia" rows="7" maxlength="4000"
+          placeholder="Exemplo: uma plataforma web que ajuda pequenos restaurantes a montar cardápios digitais com QR code, gratuita para começar."></textarea>
+        <button class="botao" id="botao-ideia">Criar a empresa com esta ideia</button>
+      </section>
+      <section class="cartao opcao">
+        <h2>Deixar o agente escolher</h2>
+        <p>O agente procura lacunas no mercado, compara oportunidades com base em evidências e escolhe sozinho o
+          melhor negócio para criar.</p>
+        <ul class="lista-simples">
+          <li>Pesquisa reclamações e pedidos reais em fóruns e redes sociais</li>
+          <li>Considera só produtos de software com custo zero</li>
+          <li>Registra a decisão e a justificativa no painel</li>
+        </ul>
+        <button class="botao" id="botao-auto">Deixar o agente escolher o negócio</button>
+      </section>
+    </div>
+    <p class="erro" id="erro-partida" hidden></p>
+    <p class="apoio pequeno" id="aviso-llm-partida"></p>
+  </main>
+
+  <!-- Painel de acompanhamento -->
+  <main class="painel" id="tela-painel" hidden>
+    <div class="coluna larga">
+      <section class="cartao" id="cartao-agora">
+        <div class="cabecalho-cartao">
+          <h2>Agora</h2>
+          <span class="discreto" id="agora-tempo"></span>
+        </div>
+        <div class="agora-corpo">
+          <div class="agora-texto">
+            <div class="agora-estado" id="agora-estado">Carregando</div>
+            <div class="agora-tarefa" id="agora-tarefa"></div>
+            <div class="agora-detalhes" id="agora-detalhes"></div>
+            <div class="barra" id="agora-barra" hidden><div class="barra-preenchida" id="agora-barra-valor"></div></div>
+          </div>
+          <figure class="visao" id="visao" hidden>
+            <img id="visao-imagem" alt="Página aberta no navegador do agente">
+            <figcaption>O que o agente está vendo no navegador</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section class="cartao" id="cartao-registro">
+        <div class="cabecalho-cartao">
+          <h2>Registro em tempo real</h2>
+          <div class="filtros" id="filtros" role="group" aria-label="Filtrar registro">
+            <button class="filtro ativo" data-filtro="tudo">Tudo</button>
+            <button class="filtro" data-filtro="marcos">Marcos</button>
+            <button class="filtro" data-filtro="acoes">Ações</button>
+            <button class="filtro" data-filtro="raciocinio">Raciocínio</button>
+            <button class="filtro" data-filtro="erros">Erros</button>
+          </div>
+        </div>
+        <div class="registro" id="registro" aria-live="polite"></div>
+        <div class="rodape-registro">
+          <label class="discreto"><input type="checkbox" id="rolagem-automatica" checked> Acompanhar o final</label>
+          <span class="discreto" id="registro-contagem"></span>
+        </div>
+      </section>
+    </div>
+
+    <div class="coluna">
+      <section class="cartao" id="cartao-empresa">
+        <div class="cabecalho-cartao"><h2>Empresa</h2></div>
+        <div class="empresa-nome" id="empresa-nome"></div>
+        <ol class="fases" id="fases"></ol>
+        <dl class="definicoes" id="empresa-dados"></dl>
+      </section>
+
+      <section class="cartao" id="cartao-resumo">
+        <div class="cabecalho-cartao">
+          <h2>Resumo da semana</h2>
+          <select id="resumo-semana" aria-label="Semana"></select>
+        </div>
+        <div class="numeros" id="resumo-numeros"></div>
+        <p class="narrativa" id="resumo-texto"></p>
+        <div id="resumo-listas"></div>
+        <span class="discreto" id="resumo-atualizado"></span>
+      </section>
+
+      <section class="cartao" id="cartao-pendencias" hidden>
+        <div class="cabecalho-cartao"><h2>Impedimentos relatados</h2></div>
+        <p class="discreto">O agente não espera por você: ele segue por outro caminho. Se quiser ajudar, resolva o
+          item e marque como resolvido.</p>
+        <div id="pendencias"></div>
+      </section>
+
+      <section class="cartao" id="cartao-tarefas">
+        <div class="cabecalho-cartao">
+          <h2>Tarefas</h2>
+          <div class="filtros" role="group" aria-label="Tipo de tarefa">
+            <button class="filtro ativo" data-aba="fila">Fila</button>
+            <button class="filtro" data-aba="finalizadas">Finalizadas</button>
+          </div>
+        </div>
+        <div class="contagem-tarefas discreto" id="tarefas-contagem"></div>
+        <div id="tarefas"></div>
+      </section>
+
+      <section class="cartao" id="cartao-recursos">
+        <div class="cabecalho-cartao"><h2>Recursos da empresa</h2></div>
+        <div id="recursos"></div>
+      </section>
+
+      <section class="cartao" id="cartao-pagamento">
+        <div class="cabecalho-cartao"><h2>Pagamento (opcional)</h2></div>
+        <div id="pagamento-situacao"></div>
+        <details id="pagamento-form-envolve">
+          <summary>Cadastrar um cartão para o agente</summary>
+          <p class="discreto">Sem cartão, o agente usa apenas recursos gratuitos. Com cartão, ele só compra o que for
+            indispensável, dentro do limite mensal, e cada uso aparece no registro. Os dados ficam cifrados nesta
+            máquina e nunca são enviados ao modelo.</p>
+          <form id="form-cartao" class="formulario" autocomplete="off">
+            <label>Número do cartão<input name="numero" inputmode="numeric" required></label>
+            <div class="linha-campos">
+              <label>Validade (MM/AA)<input name="validade" placeholder="MM/AA" required></label>
+              <label>Código<input name="cvv" inputmode="numeric" maxlength="4" required></label>
+            </div>
+            <label>Nome do titular<input name="titular"></label>
+            <label>Limite mensal em reais<input name="limite_mensal" type="number" min="1" step="0.01" required></label>
+            <button class="botao" type="submit">Salvar cartão</button>
+            <p class="erro" id="erro-cartao" hidden></p>
+          </form>
+        </details>
+        <details>
+          <summary>Fornecer uma conta ao agente</summary>
+          <p class="discreto">Opcional. Útil quando um serviço exige verificação humana no cadastro: você cria a
+            conta e entrega o acesso. A senha vai direto para o cofre cifrado.</p>
+          <form id="form-conta" class="formulario" autocomplete="off">
+            <label>Serviço<input name="servico" placeholder="github, email, cloudflare..." required></label>
+            <label>Usuário ou e-mail<input name="usuario" required></label>
+            <label>Senha ou chave de API<input name="senha" type="password" required></label>
+            <label>Observações<input name="notas" placeholder="Opcional"></label>
+            <button class="botao" type="submit">Guardar no cofre</button>
+            <p class="erro" id="erro-conta" hidden></p>
+          </form>
+        </details>
+      </section>
+    </div>
+  </main>
+
+  <script src="/estatico/app.js"></script>
+</body>
+</html>
