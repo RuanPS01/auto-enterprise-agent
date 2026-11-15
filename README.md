@@ -17,7 +17,7 @@ Depois da partida, todas as decisões são do agente: pesquisa de mercado, escol
 - **Somente modelos locais.** O agente conversa com um servidor de LLM na própria máquina ou na rede privada (Ollama, llama.cpp, LM Studio, vLLM, LocalAI). Endereços externos e variantes de nuvem são recusados.
 - **Custo zero.** O agente é instruído a usar apenas serviços gratuitos e software de código aberto. Gastar só é possível se você cadastrar um cartão no painel, e mesmo assim dentro do limite mensal que você definir.
 - **Nunca para.** O estado inteiro fica em um banco SQLite. Se a energia cair ou a máquina reiniciar, o agente retoma de onde parou, religa os serviços que criou e continua.
-- **Capacidades expansíveis.** O agente instala sozinho habilidades (skills no formato aberto `SKILL.md`) e extensões (servidores MCP) publicadas pela comunidade, e escreve as próprias.
+- **Capacidades expansíveis.** O agente já parte com um pacote padrão de 132 habilidades e 15 extensões conferidas, e continua livre para instalar sozinho outras habilidades (formato aberto `SKILL.md`) e extensões (servidores MCP) da comunidade, ou escrever as próprias.
 
 ## Como funciona
 
@@ -25,7 +25,9 @@ Depois da partida, todas as decisões são do agente: pesquisa de mercado, escol
 empresa_auto/
   agente/         laço eterno, execução de tarefas, planejamento, resumo semanal
   ferramentas/    o que o agente consegue fazer (terminal, arquivos, web, navegador, e-mail, cofre, serviços...)
-  habilidades_embutidas/   guias de trabalho que já vêm com o agente
+  habilidades_embutidas/   guias de trabalho próprios, em português
+  catalogo/       pacote padrão: habilidades e extensões da comunidade, conferidas na origem
+  provisionamento.py   instala o pacote padrão na primeira partida
   painel/         página web local (FastAPI) e API
   llm.py          cliente do modelo local
   banco.py        persistência em SQLite
@@ -54,6 +56,60 @@ As fases da empresa são: descoberta, validação, construção, lançamento e o
 | pagamento | uso do cartão do dono, só quando cadastrado |
 
 Para não sobrecarregar modelos locais, só os grupos necessários ficam visíveis em cada tarefa. O próprio modelo liga os demais quando precisa.
+
+## Pacote padrão de capacidades
+
+Na primeira partida o agente instala sozinho um conjunto de habilidades e deixa registradas as extensões recomendadas. Cada item do catálogo foi conferido na origem (pasta no repositório, pacote no npm ou no PyPI, licença). O script `tests/apoio/conferir_catalogo.py` refaz essa conferência.
+
+### Habilidades
+
+| Área | Próprias do agente (em português) | Da comunidade |
+| --- | --- | --- |
+| Gestão de projeto e produto | gestao-de-projetos, definicao-do-negocio, pesquisa-de-mercado | especificação, planejamento e refino de ideias (Addy Osmani) |
+| Programação | construcao-de-software, aplicativo-android | depuração sistemática, TDD e verificação (Superpowers); revisão, APIs, interfaces, git, desempenho, documentação (Addy Osmani); design de interfaces, teste de aplicações web e criação de servidores MCP (Anthropic); React e auditoria de interface (Vercel) |
+| Infraestrutura | infraestrutura-e-servidores, publicacao-gratuita, operacao-continua | integração contínua, observabilidade e lançamento (Addy Osmani) |
+| Acesso à web | acesso-avancado-a-web, baixar-midia-com-yt-dlp | |
+| Cibersegurança defensiva | seguranca-defensiva | endurecimento de código (Addy Osmani); auditoria de dependências, revisão de mudanças e APIs perigosas (Trail of Bits) |
+| Vídeo e motion | video-e-motion (ffmpeg, Manim) | HyperFrames, 6 habilidades (HeyGen); Remotion, 8 habilidades oficiais; Higgsfield, 9 habilidades oficiais |
+| Imagem e design | edicao-de-imagens | design gráfico, arte generativa, temas e GIFs (Anthropic); imagens de marketing |
+| Áudio | criacao-sonora (Piper, Whisper, ffmpeg) | |
+| Redes sociais e influenciador | influenciador-e-redes-sociais | conteúdo para redes, comunidade e parcerias com criadores (Marketing Skills) |
+| Marketing | marketing-e-divulgacao | 28 habilidades: posicionamento, lançamento, preços, textos, SEO, conversão, e-mail, análise (Marketing Skills) |
+| Documentos e dados | documentos-e-dados | PDF, Word, planilhas e apresentações (Anthropic) |
+| Privacidade e LGPD | privacidade-e-termos | lgpd-skills, 19 habilidades em português; lgpd-check e lgpd-md |
+| Operação da empresa | contas-e-credenciais, atendimento-ao-cliente, expandir-capacidades | |
+
+Origens e licenças: [obra/superpowers](https://github.com/obra/superpowers) (MIT), [addyosmani/agent-skills](https://github.com/addyosmani/agent-skills) (MIT), [anthropics/skills](https://github.com/anthropics/skills) (Apache 2.0), [vercel-labs/agent-skills](https://github.com/vercel-labs/agent-skills) (MIT), [heygen-com/hyperframes](https://github.com/heygen-com/hyperframes) (Apache 2.0), [remotion-dev/skills](https://github.com/remotion-dev/skills), [higgsfield-ai/skills](https://github.com/higgsfield-ai/skills) (MIT), [trailofbits/skills](https://github.com/trailofbits/skills) (CC BY-SA 4.0), [coreyhaines31/marketingskills](https://github.com/coreyhaines31/marketingskills) (MIT), [goul4rt/lgpd-skills](https://github.com/goul4rt/lgpd-skills) (MIT), [lgpd-app/skills](https://github.com/lgpd-app/skills) (Apache 2.0).
+
+Com mais de cem habilidades instaladas, o modelo não recebe a lista inteira. A cada tarefa o agente escolhe as dez mais relevantes pelo título e pela descrição da tarefa, e o modelo encontra as demais com a ferramenta `habilidade_buscar`. Habilidades da comunidade foram escritas para outros agentes: ao ler uma delas, o modelo recebe junto a equivalência entre os nomes de ferramentas.
+
+### Extensões (servidores MCP)
+
+| Extensão | Área | Exige |
+| --- | --- | --- |
+| context7 | documentação atual de bibliotecas | nada (chave gratuita opcional aumenta a cota) |
+| chrome-devtools | depuração do site: console, rede, desempenho | nada |
+| playwright | navegador alternativo | nada |
+| github, github-issues, github-projetos, github-actions, github-dependabot, github-seguranca | servidor oficial do GitHub, por conjunto de ferramentas | `github-token` no cofre |
+| cloudflare | toda a API da Cloudflare em poucas ferramentas | `cloudflare-token` |
+| netlify | publicação de sites | `netlify-token` |
+| sentry | erros de produção | `sentry-token` |
+| notion | páginas e bases de dados | `notion-token` |
+| banco-de-dados | SQLite, PostgreSQL, MySQL (DBHub) | endereço do banco |
+| elevenlabs | voz sintética por serviço externo | `elevenlabs-token` |
+
+Como funciona:
+
+- **Sem custo de memória.** As extensões ficam apenas registradas. O processo local ou a conexão remota só começa quando o modelo ativa o grupo `ext_NOME` em uma tarefa.
+- **Liberação automática.** Quando o agente cria uma conta e guarda o token no cofre com o nome indicado (ou quando você fornece a conta pelo painel), as extensões que dependem dele ficam disponíveis na hora.
+- **Dois transportes.** Processo local (stdio) e servidor remoto por HTTP com token fixo. Servidores que só aceitam login interativo no navegador não funcionam em um agente sem humano.
+- **Proteção do contexto.** Extensões com muitas ferramentas só são ligadas com um filtro de nomes, e as descrições de ferramentas nunca passam de 45% da janela de contexto do modelo.
+
+O agente vê o catálogo com `extensao_catalogo`, procura outras no registro público com `extensao_buscar` e instala qualquer servidor com `extensao_instalar`.
+
+### Programas da máquina
+
+O agente detecta quais programas existem (ffmpeg, ImageMagick, Node.js, Docker, uv e outros), se pode instalar pacotes do sistema e se há placa de vídeo, e informa isso ao modelo em toda tarefa. As habilidades adaptam o caminho ao que a máquina oferece: sem placa de vídeo, por exemplo, imagens e vídeos são feitos por código (HTML, SVG, HyperFrames) em vez de modelos de geração.
 
 ## Requisitos
 
@@ -84,7 +140,7 @@ Modelos pequenos erram mais, repetem ações e demoram a concluir tarefas longas
 ```bash
 git clone https://github.com/RuanPS01/auto-enterprise-agent.git
 cd auto-enterprise-agent
-./install.sh --ollama      # sem a opção, não instala o Ollama nem baixa o modelo
+./install.sh --ollama --completo
 .venv/bin/python -m empresa_auto verificar
 ```
 
@@ -93,9 +149,11 @@ cd auto-enterprise-agent
 ```powershell
 git clone https://github.com/RuanPS01/auto-enterprise-agent.git
 cd auto-enterprise-agent
-powershell -ExecutionPolicy Bypass -File .\install.ps1 -Ollama
+powershell -ExecutionPolicy Bypass -File .\install.ps1 -Ollama -Completo
 .\.venv\Scripts\python.exe -m empresa_auto verificar
 ```
+
+As opções são independentes. `--ollama` instala o Ollama e baixa o modelo. `--completo` instala os programas usados pelas habilidades de mídia, dados e infraestrutura (ffmpeg, ImageMagick, SoX, Node.js, uv, pandoc e outros). Sem ele o agente funciona e tenta instalar o que faltar quando uma tarefa pedir.
 
 O comando `verificar` confere Python, servidor do modelo, modelo instalado, chamada de ferramentas, navegador, git e pesquisa na web, e diz o que falta.
 
@@ -157,17 +215,12 @@ Na primeira execução é criado `~/.empresa-auto/config.toml` com todas as opç
 | `max_passos_tarefa` | 40 | passos por sessão de trabalho em uma tarefa |
 | `max_tentativas_tarefa` | 3 | sessões antes de a tarefa ser dada como falha |
 | `tarefas_por_planejamento` | 5 | tarefas concluídas entre dois ciclos de planejamento |
+| `pacote_padrao` | `true` | instala na primeira partida as habilidades e extensões recomendadas |
 | `navegador_headless` | `true` | navegador sem janela |
 | `url_searxng` | vazio | instância própria do SearXNG para pesquisas (opcional) |
 | `limite_emails_dia` | 50 | teto de e-mails enviados por dia |
 
 Toda chave pode vir de variável de ambiente com o prefixo `EA_`, por exemplo `EA_MODELO=gpt-oss:20b`. A variável `EA_SENHA_MESTRA` protege o cofre com uma senha sua em vez do arquivo de chave.
-
-## Habilidades e extensões
-
-**Habilidades** são guias em Markdown. As que já vêm com o agente cobrem pesquisa de mercado, definição do negócio, construção de software, publicação gratuita, contas e credenciais, atendimento, marketing, aplicativo Android, operação contínua e expansão de capacidades. O agente instala outras com `habilidade_instalar` a partir de qualquer repositório git que contenha arquivos `SKILL.md`, e cria as suas com `habilidade_criar`.
-
-**Extensões** são servidores MCP. O agente procura no registro público (`extensao_buscar`), instala com `extensao_instalar` e passa a enxergar as ferramentas da extensão como um grupo novo. As chaves de API ficam cifradas no cofre.
 
 ## Custo zero e cartão opcional
 
@@ -186,6 +239,10 @@ Este projeto é um agente autônomo de verdade, com acesso a terminal, navegador
 - **Receber dinheiro.** Contas de pagamento exigem identificação de uma pessoa ou empresa. O agente não tem identidade jurídica: ele constrói o produto e a base de usuários, e relata quando a cobrança depender de você.
 - **Responsabilidade.** Tudo o que o agente publica, envia ou cadastra é feito em seu nome. As regras internas proíbem spam, engano, avaliações falsas e violação de termos de uso, mas um modelo de linguagem pode errar. Acompanhe o painel, principalmente nos primeiros dias.
 - **Segurança da máquina.** O agente executa comandos e instala código da comunidade. Rode em uma máquina ou usuário dedicado, sem dados pessoais. A barreira contra comandos destrutivos é uma proteção básica, não um isolamento.
+- **Conteúdo de terceiros no pacote padrão.** As habilidades da comunidade são baixadas dos repositórios originais na primeira partida, na versão mais recente. Elas vêm de origens conhecidas, mas o conteúdo pode mudar. Para partir sem elas, defina `pacote_padrao = false`.
+- **Serviços pagos e licenças de mídia.** As habilidades do Higgsfield dependem de um serviço pago por créditos e só servem com conta fornecida por você. O Remotion é gratuito apenas para pessoas e empresas pequenas; o HyperFrames, totalmente aberto, é a opção padrão de vídeo. Música e modelos de geração têm licenças variadas, e o agente é instruído a conferir cada uma antes de publicar.
+- **Download de mídia.** A habilidade do yt-dlp limita o uso a pesquisa, conteúdo próprio e material com licença livre. Republicar conteúdo de terceiros viola direitos autorais.
+- **Redes sociais.** Publicar por API é gratuito e direto em redes abertas como Bluesky e Mastodon. Nas demais, exige aplicativo de desenvolvedor aprovado e, em algumas, pagamento: o agente relata esse impedimento em vez de automatizar cliques, o que violaria os termos das plataformas.
 - **Conteúdo malicioso.** Páginas e e-mails podem conter instruções escritas para enganar agentes. O agente é instruído a tratá-los como informação, mas modelos pequenos são mais vulneráveis. Mantenha o limite do cartão baixo e não guarde no cofre credenciais que não sejam da empresa.
 - **Cofre.** A cifra protege o arquivo contra cópias acidentais. Quem tiver acesso total à máquina, inclusive o próprio agente, consegue ler a chave. Use `EA_SENHA_MESTRA` se quiser separar a chave do disco.
 - **Resultado do negócio.** O agente trabalha sem parar, mas sucesso comercial não é garantido. Depende do modelo, do mercado e do tempo.
@@ -197,7 +254,13 @@ Este projeto é um agente autônomo de verdade, com acesso a terminal, navegador
 .venv/bin/python -m pytest
 ```
 
-Os testes cobrem banco, cofre, cliente do modelo (Ollama nativo, API compatível com OpenAI e modo JSON), ferramentas, navegador real contra um site local, cliente MCP contra um servidor falso, laço completo do agente e API do painel.
+Os testes cobrem banco, cofre, cliente do modelo (Ollama nativo, API compatível com OpenAI e modo JSON), ferramentas, navegador real contra um site local, cliente MCP nos dois transportes, catálogo e provisionamento do pacote padrão, seleção de habilidades por relevância, laço completo do agente e API do painel.
+
+Depois de mexer no catálogo, confira cada item na origem (precisa de internet):
+
+```bash
+.venv/bin/python tests/apoio/conferir_catalogo.py
+```
 
 Para ver o painel funcionando sem GPU e sem baixar modelo, há um servidor que imita a API do Ollama com respostas roteirizadas:
 

@@ -13,11 +13,13 @@ import threading
 import time
 import traceback
 
+from .. import provisionamento
 from ..banco import Banco
 from ..cofre import Cofre
 from ..config import Config
 from ..ferramentas import Ambiente, montar_catalogo
 from ..ferramentas.pagamento import situacao_cartao
+from ..ferramentas.sistema import inspecionar_ambiente
 from ..llm import ClienteLLM, ErroLLM, LLMIndisponivel
 from ..registro import Registro
 from . import resumo as modulo_resumo
@@ -47,6 +49,7 @@ class Agente:
         self._llm_erro = ""
         self._ultima_vigia = 0.0
         self._ultima_poda = 0.0
+        self._ultima_checagem_pacote = time.time()
         self._planejamentos_vazios = 0
         self._proximo_planejamento = 0.0
 
@@ -142,8 +145,10 @@ class Agente:
                 for a in self.banco.automacoes()
             ],
             "habilidades": [
-                {"nome": h["nome"], "descricao": h["descricao"], "origem": h["origem"]} for h in self.amb.habilidades.listar()
+                {"nome": h["nome"], "descricao": h["descricao"], "origem": h["origem"], "area": h["area"]}
+                for h in self.amb.habilidades.listar()
             ],
+            "maquina": inspecionar_ambiente(),
             "extensoes": self.amb.extensoes.listar(),
             "contas": self.cofre.listar(),
             "cartao": situacao_cartao(self.amb),
@@ -194,6 +199,15 @@ class Agente:
             self.amb.extensoes.carregar_todas()
         except Exception as erro:
             self.registro.erro("Falha ao carregar extensões", str(erro))
+        self._provisionar_pacote_padrao()
+
+    def _provisionar_pacote_padrao(self) -> None:
+        try:
+            if provisionamento.pendente(self.amb):
+                self.atividade.definir("preparando", "Instalando o pacote padrão de habilidades e extensões")
+                provisionamento.provisionar(self.amb)
+        except Exception as erro:
+            self.registro.erro("Falha ao instalar o pacote padrão", str(erro))
 
     def _encerrar(self) -> None:
         self.atividade.definir("desligado")
@@ -260,6 +274,9 @@ class Agente:
         if agora - self._ultima_poda >= 86400:
             self._ultima_poda = agora
             self.banco.podar_eventos(90)
+        if agora - self._ultima_checagem_pacote >= 1800:
+            self._ultima_checagem_pacote = agora
+            self._provisionar_pacote_padrao()
 
     def _disparar_automacoes(self) -> None:
         for automacao in self.banco.automacoes_vencidas():

@@ -29,7 +29,7 @@ empresa-auto = "empresa_auto.__main__:principal"
 include = ["empresa_auto*"]
 
 [tool.setuptools.package-data]
-empresa_auto = ["painel/estatico/*", "habilidades_embutidas/*/*"]
+empresa_auto = ["painel/estatico/*", "habilidades_embutidas/*/*", "catalogo/*.json"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

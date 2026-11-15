@@ -1,6 +1,7 @@
 ---
 name: atendimento-ao-cliente
 description: Regras e roteiro para responder clientes e interessados por e-mail e outros canais, com honestidade e respeito à privacidade. Use em toda comunicação com pessoas de fora da empresa.
+area: atendimento
 ---
 
 # Atendimento ao cliente

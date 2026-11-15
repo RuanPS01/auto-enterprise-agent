@@ -1,6 +1,7 @@
 ---
 name: operacao-continua
 description: Rotinas para manter a empresa saudável depois do lançamento, com monitoramento, indicadores, revisão semanal e melhoria contínua. Use ao planejar a fase de operação e ao criar automações.
+area: operacao
 ---
 
 # Operação contínua

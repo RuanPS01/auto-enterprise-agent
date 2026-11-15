@@ -1,6 +1,7 @@
 ---
 name: definicao-do-negocio
 description: Como transformar a pesquisa em uma empresa definida, com nome, proposta de valor, público, produto mínimo e modelo de receita compatível com custo zero. Use ao escolher o negócio e ao rever a estratégia.
+area: gestao
 ---
 
 # Definição do negócio

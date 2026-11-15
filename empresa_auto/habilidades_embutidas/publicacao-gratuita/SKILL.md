@@ -1,6 +1,7 @@
 ---
 name: publicacao-gratuita
 description: Caminhos para colocar sites, aplicações e APIs no ar sem custo, e para expor serviços que rodam na máquina do agente. Use ao publicar ou atualizar qualquer produto na internet.
+area: infraestrutura
 ---
 
 # Publicação gratuita

@@ -225,6 +225,28 @@ def comando_verificar(args: argparse.Namespace) -> int:
         "Node.js instalado" if shutil.which("node") else "Node.js não encontrado (opcional)",
         "Recomendado: muitas extensões da comunidade (MCP) e ferramentas web usam npx.",
     )
+    from .ferramentas.habilidades import carregar_catalogo as catalogo_de_habilidades
+    from .ferramentas.extensoes import carregar_catalogo as catalogo_de_extensoes
+    from .ferramentas.sistema import inspecionar_ambiente
+
+    maquina = inspecionar_ambiente(validade=0)
+    presentes = set(maquina["programas"])
+    for programas, uso in (
+        (("ffmpeg",), "vídeo e áudio"),
+        (("magick", "convert"), "edição de imagens (ImageMagick)"),
+        (("uv",), "instalar ferramentas Python isoladas e extensões uvx"),
+        (("docker",), "serviços em contêiner"),
+    ):
+        tem = any(nome in presentes for nome in programas)
+        linha(True if tem else None, f"{programas[0]} instalado" if tem else f"{programas[0]} não encontrado (opcional: {uso})",
+              "Instale com ./install.sh --completo ou deixe o agente instalar quando precisar.")
+    linha(True, f"Placa de vídeo: {maquina['placa_de_video'] or 'nenhuma detectada (geração de mídia por IA local fica indisponível)'}")
+    total = sum(len(f["itens"]) for f in catalogo_de_habilidades().get("fontes", []))
+    linha(
+        True,
+        f"Pacote padrão: {total} habilidades da comunidade e {len(catalogo_de_extensoes())} extensões no catálogo"
+        + ("" if cfg.pacote_padrao else " (instalação automática desligada na configuração)"),
+    )
     try:
         from .ferramentas.web import pesquisar
 

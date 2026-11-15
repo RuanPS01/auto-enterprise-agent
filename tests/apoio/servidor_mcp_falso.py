@@ -19,6 +19,18 @@ FERRAMENTAS = [
 ]
 
 
+# Com FERRAMENTAS_EXTRAS=N o servidor anuncia N ferramentas a mais (para testar extensões grandes).
+for numero in range(int(os.environ.get("FERRAMENTAS_EXTRAS", "0"))):
+    grupo = "issue" if numero % 2 == 0 else "repo"
+    FERRAMENTAS.append(
+        {
+            "name": f"{grupo}_acao_{numero}",
+            "description": f"Ferramenta extra {numero} do grupo {grupo}, com uma descrição de tamanho realista para ocupar contexto.",
+            "inputSchema": {"type": "object", "properties": {"valor": {"type": "string", "description": "Valor de entrada."}}},
+        }
+    )
+
+
 def responder(identificador, resultado):
     sys.stdout.write(json.dumps({"jsonrpc": "2.0", "id": identificador, "result": resultado}) + "\n")
     sys.stdout.flush()

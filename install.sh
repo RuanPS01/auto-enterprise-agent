@@ -1,8 +1,11 @@
 #!/usr/bin/env bash
 # Instalador da Empresa Automática para Linux.
 #
-#   ./install.sh            instala o agente e o navegador
-#   ./install.sh --ollama   também instala o Ollama e baixa o modelo padrão
+#   ./install.sh              instala o agente e o navegador
+#   ./install.sh --ollama     também instala o Ollama e baixa o modelo padrão
+#   ./install.sh --completo   também instala os programas usados pelas habilidades de mídia,
+#                             dados e infraestrutura (ffmpeg, ImageMagick, SoX, Node.js, uv e outros)
+#   As opções podem ser combinadas: ./install.sh --ollama --completo
 #
 # Variável opcional: EA_MODELO (padrão: qwen3:8b)
 set -euo pipefail
@@ -10,7 +13,14 @@ set -euo pipefail
 cd "$(dirname "$0")"
 MODELO="${EA_MODELO:-qwen3:8b}"
 COM_OLLAMA=0
-[ "${1:-}" = "--ollama" ] && COM_OLLAMA=1
+COMPLETO=0
+for opcao in "$@"; do
+  case "$opcao" in
+    --ollama) COM_OLLAMA=1 ;;
+    --completo) COMPLETO=1 ;;
+    *) echo "Opção desconhecida: $opcao"; exit 1 ;;
+  esac
+done
 
 dizer() { printf '\n== %s\n' "$1"; }
 
@@ -36,6 +46,24 @@ dizer "Instalando o navegador Chromium"
 if ! .venv/bin/python -m playwright install --with-deps chromium; then
   echo "Não foi possível instalar as bibliotecas de sistema (talvez falte sudo). Tentando só o navegador."
   .venv/bin/python -m playwright install chromium
+fi
+
+if [ "$COMPLETO" = "1" ]; then
+  dizer "Instalando os programas do perfil completo"
+  PACOTES="ffmpeg imagemagick sox jq sqlite3 pandoc nodejs npm inkscape fonts-inter fonts-noto-core"
+  if command -v apt-get >/dev/null 2>&1; then
+    SUDO=""; [ "$(id -u)" -ne 0 ] && SUDO="sudo"
+    $SUDO apt-get update -qq || true
+    for pacote in $PACOTES; do
+      $SUDO apt-get install -y -qq "$pacote" >/dev/null 2>&1 && echo "  ok     $pacote" || echo "  falhou $pacote (instale manualmente se precisar)"
+    done
+  else
+    echo "Gerenciador apt não encontrado. Instale manualmente: $PACOTES"
+  fi
+  # uv: instala ferramentas Python isoladas (uv tool install) e roda extensões com uvx
+  .venv/bin/python -m pip install --quiet uv && mkdir -p "$HOME/.local/bin" && ln -sf "$PWD/.venv/bin/uv" "$HOME/.local/bin/uv" && ln -sf "$PWD/.venv/bin/uvx" "$HOME/.local/bin/uvx" && echo "  ok     uv"
+  echo "As demais ferramentas (voz, transcrição, remoção de fundo, yt-dlp, verificadores de segurança) são"
+  echo "instaladas pelo próprio agente quando uma tarefa precisar, seguindo as habilidades."
 fi
 
 if [ "$COM_OLLAMA" = "1" ]; then

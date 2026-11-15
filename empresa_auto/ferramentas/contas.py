@@ -63,7 +63,9 @@ def registrar(cat: Catalogo, amb: Ambiente) -> None:
 
     @cat.ferramenta(
         "credencial_salvar",
-        "Guarda no cofre cifrado o acesso a uma conta da empresa (login e senha, ou chave de API no campo senha).",
+        "Guarda no cofre cifrado o acesso a uma conta da empresa (login e senha, ou chave de API no campo senha). "
+        "Tokens com nomes do catálogo (github-token, cloudflare-token, netlify-token, notion-token, sentry-token) "
+        "liberam automaticamente as extensões correspondentes.",
         _grupo="contas",
         servico=P("string", "Nome curto do serviço, por exemplo: github, cloudflare, email."),
         usuario=P("string", "Login, e-mail ou identificador da conta."),
@@ -74,7 +76,9 @@ def registrar(cat: Catalogo, amb: Ambiente) -> None:
     def credencial_salvar(servico: str, usuario: str, senha: str, url: str = "", notas: str = "") -> str:
         cofre.salvar_credencial(servico, usuario, senha, url=url, notas=notas)
         amb.registro.evento("conta", f"Credencial guardada no cofre: {servico.strip().lower()}", f"usuário: {usuario}")
-        return f"Credencial de '{servico.strip().lower()}' guardada no cofre."
+        liberadas = amb.extensoes.registrar_por_credencial(servico) if amb.extensoes else []
+        extra = f" Com ela ficaram disponíveis os grupos de extensão: {', '.join(liberadas)}." if liberadas else ""
+        return f"Credencial de '{servico.strip().lower()}' guardada no cofre.{extra}"
 
     @cat.ferramenta(
         "credencial_obter",

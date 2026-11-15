@@ -27,6 +27,7 @@ def ollama():
 def test_empresa_nasce_e_avanca_usando_a_api_do_ollama(tmp_path, ollama):
     cfg = carregar_config(tmp_path / "dados", url_llm=ollama)
     cfg.intervalo_ocioso_seg = 1
+    cfg.pacote_padrao = False
     agente = Agente(cfg, imprimir=False)
     assert isinstance(agente.llm, ClienteLLM) and agente.llm.modelo_disponivel()
     agente.iniciar_empresa("ideia", "Agenda online simples e gratuita para barbearias de bairro")

@@ -300,8 +300,19 @@
     return no;
   }
 
+  function resumoHabilidades(habilidades) {
+    // Com mais de cem habilidades instaladas, a lista mostra as próprias do agente e um total por área.
+    const proprias = habilidades.filter((h) => h.origem === 'embutida').map((h) => h.nome);
+    const porArea = {};
+    for (const h of habilidades) if (h.origem !== 'embutida') porArea[h.area || 'geral'] = (porArea[h.area || 'geral'] || 0) + 1;
+    const linhas = [];
+    if (proprias.length) linhas.push(`Próprias do agente (${proprias.length}): ${proprias.join(', ')}`);
+    for (const [area, total] of Object.entries(porArea).sort((a, b) => b[1] - a[1])) linhas.push(`Da comunidade, ${area}: ${total}`);
+    return linhas;
+  }
+
   function renderRecursos(e) {
-    const dados = [e.contas, e.servicos, e.automacoes, e.habilidades, e.extensoes, e.indicadores, e.decisoes, e.memorias];
+    const dados = [e.contas, e.servicos, e.automacoes, e.habilidades.length, e.extensoes, e.indicadores, e.decisoes, e.memorias, e.maquina];
     if (!mudou('recursos', dados)) return;
     const abertos = new Set([...$('recursos').querySelectorAll('details[open]')].map((d) => d.dataset.titulo));
     const grupos = [
@@ -310,9 +321,17 @@
       grupoRecursos('Automações', e.automacoes.map((a) => `${a.titulo} (${intervalo(a.intervalo_min)})`), 'Nenhuma rotina recorrente.'),
       grupoRecursos('Decisões', e.decisoes.map((d) => `${dia(d.ts)}: ${d.titulo}`), 'Nenhuma decisão registrada.'),
       grupoRecursos('Indicadores', e.indicadores.map((m) => `${m.nome}: ${m.valor}`), 'Nenhum indicador medido.'),
-      grupoRecursos('Habilidades', e.habilidades.map((h) => `${h.nome}${h.origem === 'instalada' ? ' (instalada pelo agente)' : ''}`), 'Nenhuma habilidade.'),
-      grupoRecursos('Extensões', e.extensoes.map((x) => `${x.nome}: ${x.ferramentas} ferramentas`), 'Nenhuma extensão instalada.'),
+      grupoRecursos('Habilidades', resumoHabilidades(e.habilidades), 'Nenhuma habilidade.'),
+      grupoRecursos('Extensões', e.extensoes.map((x) => `${x.nome}: ${x.ferramentas ? x.ferramentas + ' ferramentas' : 'inicia quando for usada'}${x.descricao ? ' · ' + x.descricao : ''}`), 'Nenhuma extensão instalada.'),
+      grupoRecursos('Programas na máquina', [
+        (e.maquina.programas || []).join(', ') || 'nenhum dos programas esperados',
+        e.maquina.placa_de_video ? `placa de vídeo: ${e.maquina.placa_de_video}` : 'sem placa de vídeo',
+        e.maquina.pode_instalar_pacotes ? 'o agente pode instalar pacotes do sistema' : 'o agente não pode instalar pacotes do sistema',
+      ], 'Nenhum programa detectado.'),
     ];
+    grupos[7].querySelector('summary .discreto').textContent = String((e.maquina.programas || []).length);
+    // O contador de habilidades mostra o total, não o número de linhas do resumo.
+    grupos[5].querySelector('summary .discreto').textContent = String(e.habilidades.length);
     grupos.forEach((g) => { if (abertos.has(g.dataset.titulo)) g.setAttribute('open', ''); });
     $('recursos').replaceChildren(...grupos, el('p', { classe: 'discreto', texto: `${e.memorias} conhecimentos guardados na memória permanente.` }));
   }

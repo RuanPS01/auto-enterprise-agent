@@ -1,6 +1,7 @@
 ---
 name: construcao-de-software
 description: Como construir o produto da empresa em passos pequenos e testados, escolhendo tecnologias que rodam em hospedagem gratuita. Use em qualquer tarefa de engenharia.
+area: programacao
 ---
 
 # Construção de software
@@ -45,3 +46,14 @@ description: Como construir o produto da empresa em passos pequenos e testados, 
 - Instalação sem perguntas: `npm install --no-audit --no-fund`, `pip install -q pacote`
 
 Comandos não podem pedir entrada interativa. Use sempre as opções que respondem "sim" automaticamente.
+
+## Habilidades e extensões que aprofundam
+
+- Antes de escrever código novo: spec-driven-development e incremental-implementation.
+- Erro que não se resolve: systematic-debugging. Função nova ou correção: test-driven-development.
+- Antes de dar por pronto: verification-before-completion e code-review-and-quality.
+- Interface: frontend-design, frontend-ui-engineering e web-design-guidelines. Testar no navegador: webapp-testing.
+- API: api-and-interface-design. Desempenho: performance-optimization. Segurança: seguranca-defensiva.
+- Documentação atual de uma biblioteca: ative o grupo ext_context7 e consulte antes de usar uma API de que não tem certeza.
+- Depurar o site em um navegador (console, rede, desempenho): grupo ext_chrome_devtools, com filtro.
+

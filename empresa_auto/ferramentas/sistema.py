@@ -7,6 +7,7 @@ import re
 import shutil
 import subprocess
 import sys
+import time
 from pathlib import Path
 
 import psutil
@@ -41,8 +42,59 @@ def linha_de_comando(comando: str) -> list[str]:
     return [bash, "-lc", comando] if bash else ["/bin/sh", "-c", comando]
 
 
+# Programas que as habilidades usam. O agente informa ao modelo quais existem nesta máquina.
+PROGRAMAS_UTEIS = [
+    "git", "gh", "node", "npm", "npx", "python3", "uv", "uvx", "docker", "ffmpeg", "magick", "convert", "inkscape",
+    "sox", "blender", "pandoc", "soffice", "sqlite3", "psql", "jq", "curl", "rsync", "cloudflared", "caddy",
+    "semgrep", "gitleaks", "trivy", "markitdown", "rembg", "manim", "postiz", "whisper-cli", "java",
+]
+_cache_ambiente: tuple[float, dict] | None = None
+
+
+def _pastas_extras_do_path() -> list[str]:
+    """Pastas onde ferramentas instaladas pelo próprio agente costumam ficar (uv tool, pip --user, npm -g)."""
+    casa = Path.home()
+    candidatas = [casa / ".local" / "bin", casa / ".cargo" / "bin", casa / ".npm-global" / "bin"]
+    return [str(c) for c in candidatas if c.is_dir()]
+
+
+def inspecionar_ambiente(validade: float = 600) -> dict:
+    """Descobre o que a máquina oferece: programas, permissão de instalar pacotes e placa de vídeo."""
+    global _cache_ambiente
+    if _cache_ambiente is not None and time.time() - _cache_ambiente[0] < validade:
+        return _cache_ambiente[1]
+    caminho = os.pathsep.join(_pastas_extras_do_path() + [os.environ.get("PATH", "")])
+    presentes = [nome for nome in PROGRAMAS_UTEIS if shutil.which(nome, path=caminho)]
+    pode_instalar = False
+    if not EH_WINDOWS:
+        if hasattr(os, "geteuid") and os.geteuid() == 0:
+            pode_instalar = True
+        elif shutil.which("sudo"):
+            try:
+                pode_instalar = subprocess.run(["sudo", "-n", "true"], capture_output=True, timeout=5).returncode == 0
+            except (OSError, subprocess.SubprocessError):
+                pode_instalar = False
+    placa = ""
+    if shutil.which("nvidia-smi"):
+        try:
+            saida = subprocess.run(
+                ["nvidia-smi", "--query-gpu=name,memory.total", "--format=csv,noheader"],
+                capture_output=True, text=True, timeout=10,
+            )
+            if saida.returncode == 0:
+                placa = saida.stdout.strip().splitlines()[0] if saida.stdout.strip() else ""
+        except (OSError, subprocess.SubprocessError):
+            placa = ""
+    dados = {"programas": presentes, "pode_instalar_pacotes": pode_instalar, "placa_de_video": placa}
+    _cache_ambiente = (time.time(), dados)
+    return dados
+
+
 def ambiente_de_processo() -> dict:
     env = dict(os.environ)
+    extras = [pasta for pasta in _pastas_extras_do_path() if pasta not in env.get("PATH", "").split(os.pathsep)]
+    if extras:
+        env["PATH"] = os.pathsep.join(extras + [env.get("PATH", "")])
     env.update(
         {
             "CI": "1",

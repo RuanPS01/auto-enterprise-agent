@@ -2,12 +2,17 @@
 
 from __future__ import annotations
 
+import json
 import time
 
 from .base import Ambiente, Catalogo, P
 
 AREAS = ["pesquisa", "produto", "engenharia", "marketing", "atendimento", "operacoes", "financeiro"]
 FASES = ["descoberta", "validacao", "construcao", "lancamento", "operacao"]
+# Fração máxima da janela de contexto que as descrições de ferramentas podem ocupar.
+LIMITE_CONTEXTO_FERRAMENTAS = 0.45
+# Extensões com mais ferramentas que isto só são ligadas com filtro.
+MAX_FERRAMENTAS_SEM_FILTRO = 14
 CAMPOS_EMPRESA = [
     "nome",
     "missao",
@@ -37,20 +42,58 @@ def registrar(cat: Catalogo, amb: Ambiente) -> None:
         amb.conclusao = {"resultado": resultado.strip(), "sucesso": bool(sucesso)}
         return "Tarefa encerrada."
 
+    def _custo(nomes_grupos: set[str], avulsas: set[str]) -> int:
+        """Estimativa, em tokens, do espaço que as descrições das ferramentas ocupam no contexto do modelo."""
+        return len(json.dumps(cat.esquemas(nomes_grupos, avulsas), ensure_ascii=False)) // 3
+
     @cat.ferramenta(
         "ativar_ferramentas",
-        "Liga um grupo extra de ferramentas para esta tarefa. Grupos: navegador (usar sites), contas (cofre e "
-        "e-mail), operacao (serviços e automações), gestao (dados da empresa e fila de tarefas), expansao "
-        "(habilidades e extensões), pagamento (cartão do dono, se houver).",
+        "Liga um grupo extra de ferramentas para esta tarefa. Grupos embutidos: navegador (usar sites), contas "
+        "(cofre e e-mail), operacao (serviços e automações), gestao (dados da empresa e fila de tarefas), expansao "
+        "(habilidades e extensões), pagamento (cartão do dono, se houver). Extensões usam grupos ext_NOME; nas que "
+        "têm muitas ferramentas, informe um filtro para ligar só as necessárias.",
         grupo=P("string", "Nome do grupo a ativar."),
+        filtro=P("string", "Só para extensões: palavras que aparecem no nome das ferramentas desejadas, separadas por vírgula.", obrigatorio=False),
     )
-    def ativar_ferramentas(grupo: str) -> str:
+    def ativar_ferramentas(grupo: str, filtro: str = "") -> str:
         grupo = grupo.strip().lower()
         disponiveis = cat.grupos()
         if grupo == "pagamento" and not amb.cofre.obter_cartao():
             return "O dono não cadastrou cartão: não há ferramentas de pagamento. Tudo deve ser gratuito."
         if grupo not in disponiveis:
             return f"ERRO: grupo desconhecido. Grupos disponíveis: {', '.join(sorted(disponiveis))}."
+        limite = int(amb.cfg.contexto_tokens * LIMITE_CONTEXTO_FERRAMENTAS)
+        estouro = (
+            "NEGADO: essas ferramentas não cabem na memória do modelo junto com as que já estão ligadas. "
+            "Use um filtro mais específico, ou conclua esta etapa e crie outra tarefa para a próxima."
+        )
+
+        if grupo.startswith("ext_") and amb.extensoes is not None:
+            try:
+                amb.extensoes.garantir(grupo[4:])
+            except Exception as erro:
+                return f"ERRO ao iniciar a extensão: {erro}"
+            nomes = cat.nomes({grupo})
+            termos = [t.strip().lower() for t in filtro.split(",") if t.strip()]
+            if termos:
+                escolhidas = [n for n in nomes if any(t in n.lower() for t in termos)]
+                if not escolhidas:
+                    return f"Nenhuma ferramenta combina com o filtro. Ferramentas da extensão: {', '.join(nomes)}."
+            elif len(nomes) > MAX_FERRAMENTAS_SEM_FILTRO:
+                return (
+                    f"A extensão tem {len(nomes)} ferramentas, demais para ligar de uma vez. Chame de novo com "
+                    f"filtro, usando partes dos nomes das que você precisa, separadas por vírgula. "
+                    f"Ferramentas: {', '.join(nomes)}."
+                )
+            else:
+                escolhidas = nomes
+            if _custo(amb.grupos_ativos, amb.ferramentas_avulsas | set(escolhidas)) > limite:
+                return estouro
+            amb.ferramentas_avulsas.update(escolhidas)
+            return f"Ativadas {len(escolhidas)} ferramentas da extensão: {', '.join(escolhidas)}."
+
+        if _custo(amb.grupos_ativos | {grupo}, amb.ferramentas_avulsas) > limite:
+            return estouro
         amb.grupos_ativos.add(grupo)
         return f"Grupo '{grupo}' ativado. Ferramentas novas: {', '.join(cat.nomes({grupo}))}."
 

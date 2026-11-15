@@ -73,6 +73,7 @@ class Ambiente:
     # Estado da tarefa em execução
     tarefa_atual: dict | None = None
     grupos_ativos: set[str] = field(default_factory=lambda: {"base"})
+    ferramentas_avulsas: set[str] = field(default_factory=set)  # ferramentas de extensões ligadas uma a uma
     conclusao: dict | None = None
     pagamento_autorizado: bool = False
 
@@ -138,6 +139,9 @@ class Catalogo:
     def adicionar(self, ferramenta: Ferramenta) -> None:
         self._ferramentas[ferramenta.nome] = ferramenta
 
+    def remover(self, nome: str) -> None:
+        self._ferramentas.pop(nome, None)
+
     def remover_grupo(self, grupo: str) -> None:
         for nome in [n for n, f in self._ferramentas.items() if f.grupo == grupo]:
             del self._ferramentas[nome]
@@ -148,12 +152,15 @@ class Catalogo:
         return self._ferramentas.get(nome)
 
     def grupos(self) -> dict[str, str]:
+        """Grupos embutidos que têm ferramentas, mais os grupos de extensões (mesmo as ainda não iniciadas)."""
         presentes = {f.grupo for f in self._ferramentas.values()}
-        todos = {**GRUPOS, **self.grupos_extras}
-        return {nome: descricao for nome, descricao in todos.items() if nome in presentes}
+        embutidos = {nome: descricao for nome, descricao in GRUPOS.items() if nome in presentes}
+        return {**embutidos, **self.grupos_extras}
 
-    def esquemas(self, grupos: set[str]) -> list[dict]:
-        return [f.esquema() for f in self._ferramentas.values() if f.grupo in grupos]
+    def esquemas(self, grupos: set[str], avulsas: set[str] | None = None) -> list[dict]:
+        """Esquemas das ferramentas dos grupos ativos e das ferramentas ativadas individualmente."""
+        avulsas = avulsas or set()
+        return [f.esquema() for f in self._ferramentas.values() if f.grupo in grupos or f.nome in avulsas]
 
     def nomes(self, grupos: set[str] | None = None) -> list[str]:
         return [n for n, f in self._ferramentas.items() if grupos is None or f.grupo in grupos]

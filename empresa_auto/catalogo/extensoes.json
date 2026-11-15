@@ -1,0 +1,259 @@
+{
+ "versao": 1,
+ "conferido_em": "2026-11-14",
+ "observacao": "Pacotes e endereços conferidos no npm, no PyPI e na documentação oficial de cada servidor. Entradas com padrao=true e sem credencial ficam registradas desde a primeira partida.",
+ "extensoes": [
+  {
+   "nome": "context7",
+   "area": "programacao",
+   "tipo": "stdio",
+   "comando": "npx",
+   "args": [
+    "-y",
+    "@upstash/context7-mcp@latest"
+   ],
+   "padrao": true,
+   "descricao": "Documentação atualizada e exemplos de código de bibliotecas e frameworks. Consulte antes de programar com uma biblioteca (2 ferramentas). Funciona sem chave com cota pequena.",
+   "fonte": "https://github.com/upstash/context7",
+   "env": {
+    "CONTEXT7_API_KEY": "{segredo}"
+   },
+   "credencial": {
+    "servico": "context7-token",
+    "opcional": true,
+    "como_obter": "Sem chave a cota é pequena. Crie uma chave gratuita em https://context7.com/dashboard."
+   }
+  },
+  {
+   "nome": "chrome-devtools",
+   "area": "programacao web",
+   "tipo": "stdio",
+   "comando": "npx",
+   "args": [
+    "-y",
+    "chrome-devtools-mcp@latest",
+    "--headless",
+    "--isolated",
+    "--executablePath",
+    "{chromium}"
+   ],
+   "padrao": true,
+   "descricao": "Depurar o site da empresa em um navegador: erros do console, rede, desempenho e emulação de celular. Tem muitas ferramentas: ative com filtro.",
+   "fonte": "https://github.com/ChromeDevTools/chrome-devtools-mcp"
+  },
+  {
+   "nome": "playwright",
+   "area": "web",
+   "tipo": "stdio",
+   "comando": "npx",
+   "args": [
+    "-y",
+    "@playwright/mcp@latest",
+    "--headless",
+    "--isolated"
+   ],
+   "padrao": false,
+   "descricao": "Navegador alternativo da Microsoft com leitura pela árvore de acessibilidade. Use só se o navegador embutido não der conta de um site.",
+   "fonte": "https://github.com/microsoft/playwright-mcp"
+  },
+  {
+   "nome": "github",
+   "area": "programacao gestao",
+   "tipo": "http",
+   "url": "https://api.githubcopilot.com/mcp/",
+   "cabecalhos": {
+    "Authorization": "Bearer {segredo}"
+   },
+   "credencial": {
+    "servico": "github-token",
+    "como_obter": "Crie um token de acesso pessoal em https://github.com/settings/personal-access-tokens/new, com acesso aos repositórios da empresa."
+   },
+   "descricao": "GitHub oficial: repositórios, arquivos, issues e pull requests da empresa. Tem muitas ferramentas: ative com filtro.",
+   "fonte": "https://github.com/github/github-mcp-server"
+  },
+  {
+   "nome": "github-issues",
+   "area": "gestao",
+   "tipo": "http",
+   "url": "https://api.githubcopilot.com/mcp/x/issues",
+   "cabecalhos": {
+    "Authorization": "Bearer {segredo}"
+   },
+   "credencial": {
+    "servico": "github-token",
+    "como_obter": "Crie um token de acesso pessoal em https://github.com/settings/personal-access-tokens/new, com acesso aos repositórios da empresa."
+   },
+   "descricao": "GitHub oficial, só issues: criar, comentar, rotular e fechar tarefas de projeto.",
+   "fonte": "https://github.com/github/github-mcp-server"
+  },
+  {
+   "nome": "github-projetos",
+   "area": "gestao",
+   "tipo": "http",
+   "url": "https://api.githubcopilot.com/mcp/x/projects",
+   "cabecalhos": {
+    "Authorization": "Bearer {segredo}"
+   },
+   "credencial": {
+    "servico": "github-token",
+    "como_obter": "Crie um token de acesso pessoal em https://github.com/settings/personal-access-tokens/new, com acesso aos repositórios da empresa."
+   },
+   "descricao": "GitHub oficial, só Projects: quadros de gestão de projeto, itens e campos.",
+   "fonte": "https://github.com/github/github-mcp-server"
+  },
+  {
+   "nome": "github-actions",
+   "area": "infraestrutura",
+   "tipo": "http",
+   "url": "https://api.githubcopilot.com/mcp/x/actions",
+   "cabecalhos": {
+    "Authorization": "Bearer {segredo}"
+   },
+   "credencial": {
+    "servico": "github-token",
+    "como_obter": "Crie um token de acesso pessoal em https://github.com/settings/personal-access-tokens/new, com acesso aos repositórios da empresa."
+   },
+   "descricao": "GitHub oficial, só Actions: acompanhar e disparar pipelines de build, teste e deploy.",
+   "fonte": "https://github.com/github/github-mcp-server"
+  },
+  {
+   "nome": "github-dependabot",
+   "area": "seguranca",
+   "tipo": "http",
+   "url": "https://api.githubcopilot.com/mcp/x/dependabot",
+   "cabecalhos": {
+    "Authorization": "Bearer {segredo}"
+   },
+   "credencial": {
+    "servico": "github-token",
+    "como_obter": "Crie um token de acesso pessoal em https://github.com/settings/personal-access-tokens/new, com acesso aos repositórios da empresa."
+   },
+   "descricao": "GitHub oficial, só Dependabot: alertas de dependências vulneráveis nos repositórios da empresa.",
+   "fonte": "https://github.com/github/github-mcp-server"
+  },
+  {
+   "nome": "github-seguranca",
+   "area": "seguranca",
+   "tipo": "http",
+   "url": "https://api.githubcopilot.com/mcp/x/code_security",
+   "cabecalhos": {
+    "Authorization": "Bearer {segredo}"
+   },
+   "credencial": {
+    "servico": "github-token",
+    "como_obter": "Crie um token de acesso pessoal em https://github.com/settings/personal-access-tokens/new, com acesso aos repositórios da empresa."
+   },
+   "descricao": "GitHub oficial, só segurança de código: alertas de varredura de código dos repositórios da empresa.",
+   "fonte": "https://github.com/github/github-mcp-server"
+  },
+  {
+   "nome": "cloudflare",
+   "area": "infraestrutura",
+   "tipo": "http",
+   "url": "https://mcp.cloudflare.com/mcp",
+   "cabecalhos": {
+    "Authorization": "Bearer {segredo}"
+   },
+   "credencial": {
+    "servico": "cloudflare-token",
+    "como_obter": "Crie um token de API em https://dash.cloudflare.com/profile/api-tokens com as permissões necessárias (Workers, Pages, DNS)."
+   },
+   "descricao": "Cloudflare oficial: toda a API (Workers, Pages, DNS, túneis, armazenamento) em poucas ferramentas, econômico em contexto.",
+   "fonte": "https://github.com/cloudflare/mcp"
+  },
+  {
+   "nome": "netlify",
+   "area": "infraestrutura",
+   "tipo": "stdio",
+   "comando": "npx",
+   "args": [
+    "-y",
+    "@netlify/mcp"
+   ],
+   "env": {
+    "NETLIFY_PERSONAL_ACCESS_TOKEN": "{segredo}"
+   },
+   "credencial": {
+    "servico": "netlify-token",
+    "como_obter": "No painel da Netlify: User settings, OAuth, New access token."
+   },
+   "descricao": "Netlify oficial: criar sites, publicar e gerenciar deploys e variáveis de ambiente.",
+   "fonte": "https://github.com/netlify/netlify-mcp"
+  },
+  {
+   "nome": "sentry",
+   "area": "infraestrutura",
+   "tipo": "stdio",
+   "comando": "npx",
+   "args": [
+    "-y",
+    "@sentry/mcp-server@latest"
+   ],
+   "env": {
+    "SENTRY_AUTH_TOKEN": "{segredo}"
+   },
+   "credencial": {
+    "servico": "sentry-token",
+    "como_obter": "Crie um User Auth Token nas configurações da conta do Sentry."
+   },
+   "descricao": "Sentry oficial: consultar erros e problemas de produção do produto da empresa.",
+   "fonte": "https://github.com/getsentry/sentry-mcp"
+  },
+  {
+   "nome": "notion",
+   "area": "gestao",
+   "tipo": "stdio",
+   "comando": "npx",
+   "args": [
+    "-y",
+    "@notionhq/notion-mcp-server"
+   ],
+   "env": {
+    "NOTION_TOKEN": "{segredo}"
+   },
+   "credencial": {
+    "servico": "notion-token",
+    "como_obter": "Crie uma integração interna em https://www.notion.so/profile/integrations e dê a ela acesso às páginas."
+   },
+   "descricao": "Notion oficial: ler e escrever páginas e bases de dados (documentação, roteiros, calendário editorial).",
+   "fonte": "https://github.com/makenotion/notion-mcp-server"
+  },
+  {
+   "nome": "banco-de-dados",
+   "area": "dados programacao",
+   "tipo": "stdio",
+   "comando": "npx",
+   "args": [
+    "-y",
+    "@bytebase/dbhub@latest",
+    "--transport",
+    "stdio",
+    "--dsn",
+    "{dsn}"
+   ],
+   "parametros": {
+    "dsn": "Endereço do banco, por exemplo sqlite:///caminho/completo/dados.db ou postgres://usuario:senha@host:5432/banco."
+   },
+   "descricao": "DBHub: consultar e explorar bancos SQLite, PostgreSQL, MySQL e MariaDB com apenas 2 ferramentas. Exige Node.js 22.5 ou mais novo.",
+   "fonte": "https://github.com/bytebase/dbhub"
+  },
+  {
+   "nome": "elevenlabs",
+   "area": "midia",
+   "tipo": "stdio",
+   "comando": "uvx",
+   "args": [
+    "elevenlabs-mcp"
+   ],
+   "env": {
+    "ELEVENLABS_API_KEY": "{segredo}"
+   },
+   "credencial": {
+    "servico": "elevenlabs-token",
+    "como_obter": "Crie uma chave em https://elevenlabs.io/app/settings/api-keys. O plano gratuito tem cota mensal pequena."
+   },
+   "descricao": "ElevenLabs oficial: voz sintética e efeitos sonoros por serviço externo com cota gratuita limitada. Prefira a voz local (habilidade criacao-sonora).",
+   "fonte": "https://github.com/elevenlabs/elevenlabs-mcp"
+  }
+ ]
+}

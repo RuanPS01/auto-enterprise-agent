@@ -1,6 +1,7 @@
 ---
 name: aplicativo-android
 description: Caminhos para entregar um aplicativo Android sem loja paga, gerando um APK distribuído por link, e quando preferir uma aplicação web instalável. Use quando o produto precisar existir como aplicativo de celular.
+area: programacao
 ---
 
 # Aplicativo Android sem custo

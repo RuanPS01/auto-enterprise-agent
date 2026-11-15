@@ -1,6 +1,7 @@
 ---
 name: contas-e-credenciais
 description: Procedimento para criar contas gratuitas em serviços, guardar acessos no cofre e lidar com verificações. Use sempre que a empresa precisar de uma conta nova, de um e-mail ou de uma chave de API.
+area: operacao
 ---
 
 # Contas e credenciais

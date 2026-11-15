@@ -238,6 +238,7 @@ def criar_app(agente: Agente) -> FastAPI:
             pedido.servico, pedido.usuario, pedido.senha, url=pedido.url, notas=pedido.notas, origem="dono"
         )
         agente.registro.evento("conta", f"Conta fornecida pelo dono: {pedido.servico.strip().lower()}", f"usuário: {pedido.usuario}")
+        agente.amb.extensoes.registrar_por_credencial(pedido.servico)
         return {"ok": True}
 
     @app.post("/api/bloqueios/{bloqueio_id}/resolver")

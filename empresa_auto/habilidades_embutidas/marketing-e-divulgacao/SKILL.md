@@ -1,6 +1,7 @@
 ---
 name: marketing-e-divulgacao
 description: Como conseguir usuários sem gastar, com conteúdo útil, busca orgânica e participação honesta em comunidades e redes sociais. Use em tarefas de marketing, lançamento e crescimento.
+area: marketing
 ---
 
 # Marketing e divulgação sem custo

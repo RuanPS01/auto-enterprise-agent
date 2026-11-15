@@ -1,6 +1,7 @@
 ---
 name: pesquisa-de-mercado
 description: Método para investigar um mercado, medir demanda real, mapear concorrentes e encontrar lacunas. Use antes de escolher ou validar qualquer negócio, produto ou funcionalidade.
+area: pesquisa
 ---
 
 # Pesquisa de mercado

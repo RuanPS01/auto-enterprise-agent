@@ -1,10 +1,12 @@
 # Instalador da Empresa Automática para Windows (PowerShell).
 #
-#   .\install.ps1            instala o agente e o navegador
-#   .\install.ps1 -Ollama    também instala o Ollama (via winget) e baixa o modelo padrão
+#   .\install.ps1             instala o agente e o navegador
+#   .\install.ps1 -Ollama     também instala o Ollama (via winget) e baixa o modelo padrão
+#   .\install.ps1 -Completo   também instala os programas usados pelas habilidades de mídia e
+#                             infraestrutura (ffmpeg, ImageMagick, Node.js, uv, jq)
 #
 # Se o PowerShell bloquear a execução:  powershell -ExecutionPolicy Bypass -File .\install.ps1
-param([switch]$Ollama, [string]$Modelo = "qwen3:8b")
+param([switch]$Ollama, [switch]$Completo, [string]$Modelo = "qwen3:8b")
 
 $ErrorActionPreference = "Stop"
 Set-Location $PSScriptRoot
@@ -31,6 +33,15 @@ if ($LASTEXITCODE -ne 0) { exit 1 }
 
 Dizer "Instalando o navegador Chromium"
 & .\.venv\Scripts\python.exe -m playwright install chromium
+
+if ($Completo) {
+    Dizer "Instalando os programas do perfil completo"
+    foreach ($pacote in @("Gyan.FFmpeg", "ImageMagick.ImageMagick", "OpenJS.NodeJS.LTS", "astral-sh.uv", "jqlang.jq")) {
+        winget install --id $pacote -e --accept-source-agreements --accept-package-agreements | Out-Null
+        if ($LASTEXITCODE -eq 0) { Write-Host "  ok     $pacote" } else { Write-Host "  falhou $pacote (instale manualmente se precisar)" }
+    }
+    Write-Host "As demais ferramentas são instaladas pelo próprio agente quando uma tarefa precisar."
+}
 
 if ($Ollama) {
     if (-not (Get-Command ollama -ErrorAction SilentlyContinue)) {

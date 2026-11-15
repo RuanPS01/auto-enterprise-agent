@@ -43,6 +43,7 @@ MODELO_CONFIG = """\
 # max_tentativas_tarefa = 3
 # tarefas_por_planejamento = 5
 # intervalo_resumo_horas = 6
+# pacote_padrao = true       # false impede a instalação automática das habilidades e extensões recomendadas
 
 # --- Ferramentas ---
 # tempo_limite_comando = 300
@@ -79,6 +80,7 @@ class Config:
     max_tarefas_abertas: int = 30
     intervalo_ocioso_seg: int = 30
     intervalo_resumo_horas: float = 6.0
+    pacote_padrao: bool = True  # instala na primeira partida as habilidades e extensões recomendadas
 
     # Ferramentas
     tempo_limite_comando: int = 300

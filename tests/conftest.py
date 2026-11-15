@@ -52,6 +52,7 @@ def cfg(tmp_path):
     config = carregar_config(tmp_path / "dados")
     config.preparar_diretorios()
     config.intervalo_ocioso_seg = 1
+    config.pacote_padrao = False  # os testes não baixam nada da internet
     return config
 
 

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import platform
+import sys
 import threading
 import time
 from dataclasses import dataclass, field
@@ -11,6 +12,7 @@ from typing import Callable
 
 from ..ferramentas.base import Ambiente
 from ..ferramentas.pagamento import situacao_cartao
+from ..ferramentas.sistema import inspecionar_ambiente
 from ..llm import estimar_tokens
 from .prompts import (
     CONSTITUICAO,
@@ -132,10 +134,15 @@ class Executor:
             if self.amb.supervisor
             else ""
         ) or "nenhum"
+        maquina = inspecionar_ambiente()
         return (
             f"sistema: {sistema} ({terminal})\n"
             f"pasta de trabalho: {cfg.dir_trabalho}\n"
             f"data e hora: {time.strftime('%d/%m/%Y %H:%M')}\n"
+            f"python do agente (tem playwright): {sys.executable}\n"
+            f"programas instalados: {', '.join(maquina['programas']) or 'nenhum dos esperados'}\n"
+            f"instalar pacotes do sistema: {'permitido' if maquina['pode_instalar_pacotes'] else 'sem permissão (use uv, pip ou npm na pasta do usuário)'}\n"
+            f"placa de vídeo: {maquina['placa_de_video'] or 'nenhuma (evite modelos de geração pesados)'}\n"
             f"cartão do dono: {texto_cartao}\n"
             f"contas no cofre: {contas}\n"
             f"serviços da empresa: {servicos}"
@@ -145,7 +152,10 @@ class Executor:
         partes = [CONSTITUICAO, "EMPRESA\n" + self._bloco_empresa(), "AMBIENTE\n" + self._bloco_ambiente()]
         if tarefa["tipo"] != "planejamento":
             if self.amb.habilidades:
-                partes.append("HABILIDADES DISPONÍVEIS (leia com habilidade_ler)\n" + self.amb.habilidades.catalogo_resumido())
+                partes.append(
+                    "HABILIDADES MAIS RELEVANTES PARA ESTA TAREFA (leia com habilidade_ler antes de começar)\n"
+                    + self.amb.habilidades.catalogo_resumido(f"{tarefa['titulo']} {tarefa['descricao']}", tarefa["area"])
+                )
             grupos = self.amb.catalogo.grupos()
             if not self.amb.cofre.obter_cartao():
                 grupos.pop("pagamento", None)
@@ -218,7 +228,7 @@ class Executor:
         cat = self.amb.catalogo
         if tarefa["tipo"] == "planejamento":
             return [e for e in cat.esquemas({"base", "gestao"}) if e["nome"] in FERRAMENTAS_PLANEJAMENTO]
-        return cat.esquemas(self.amb.grupos_ativos)
+        return cat.esquemas(self.amb.grupos_ativos, self.amb.ferramentas_avulsas)
 
     # ------------------------------------------------------------------ gestão da janela de contexto
     @staticmethod
@@ -301,6 +311,7 @@ class Executor:
         amb.conclusao = None
         amb.pagamento_autorizado = False
         amb.grupos_ativos = set(GRUPOS_POR_AREA.get(tarefa["area"], {"base"}))
+        amb.ferramentas_avulsas = set()
         max_passos = 14 if planejamento else amb.cfg.max_passos_tarefa
 
         mensagens: list[dict] = [
@@ -357,9 +368,10 @@ class Executor:
                         saida = amb.catalogo.executar(chamada.nome, chamada.argumentos)
                     elif amb.catalogo.obter(chamada.nome):
                         grupo = amb.catalogo.obter(chamada.nome).grupo
+                        dica = " e um filtro com parte do nome dela" if grupo.startswith("ext_") else ""
                         saida = (
                             f"ERRO: a ferramenta '{chamada.nome}' pertence ao grupo '{grupo}', que não está ativo. "
-                            f"Chame ativar_ferramentas com grupo='{grupo}' e repita."
+                            f"Chame ativar_ferramentas com grupo='{grupo}'{dica} e repita."
                         )
                     else:
                         saida = f"ERRO: a ferramenta '{chamada.nome}' não existe. Use apenas as ferramentas disponíveis."
