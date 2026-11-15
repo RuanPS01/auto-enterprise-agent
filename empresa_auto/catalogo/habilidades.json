@@ -1,0 +1,639 @@
+{
+ "versao": 1,
+ "conferido_em": "2026-11-14",
+ "observacao": "Cada pasta foi conferida na origem. O agente pode instalar outras habilidades por conta própria com habilidade_instalar.",
+ "fontes": [
+  {
+   "origem": "https://github.com/obra/superpowers",
+   "ramo": "main",
+   "licenca": "MIT",
+   "itens": [
+    {
+     "pasta": "skills/systematic-debugging",
+     "area": "programacao",
+     "descricao": "Depuração sistemática: achar a causa raiz de um erro, teste que falha ou comportamento inesperado antes de propor a correção."
+    },
+    {
+     "pasta": "skills/test-driven-development",
+     "area": "programacao",
+     "descricao": "Desenvolvimento guiado por testes: escrever o teste antes do código ao criar uma função ou corrigir um defeito."
+    },
+    {
+     "pasta": "skills/verification-before-completion",
+     "area": "programacao",
+     "descricao": "Verificação antes de concluir: rodar e conferir as evidências antes de afirmar que algo está pronto, corrigido ou passando."
+    }
+   ]
+  },
+  {
+   "origem": "https://github.com/addyosmani/agent-skills",
+   "ramo": "main",
+   "licenca": "MIT",
+   "itens": [
+    {
+     "pasta": "skills/spec-driven-development",
+     "area": "gestao",
+     "descricao": "Especificação antes do código: escrever a especificação de um projeto ou funcionalidade nova antes de implementar."
+    },
+    {
+     "pasta": "skills/planning-and-task-breakdown",
+     "area": "gestao",
+     "descricao": "Planejamento de projeto: quebrar uma especificação em tarefas pequenas, ordenadas e verificáveis."
+    },
+    {
+     "pasta": "skills/idea-refine",
+     "area": "gestao",
+     "descricao": "Refinar ideias: transformar uma ideia vaga de produto em um conceito claro e acionável."
+    },
+    {
+     "pasta": "skills/incremental-implementation",
+     "area": "programacao",
+     "descricao": "Implementação incremental: entregar mudanças de código em fatias finas e verificáveis."
+    },
+    {
+     "pasta": "skills/api-and-interface-design",
+     "area": "programacao",
+     "descricao": "Projeto de APIs e interfaces estáveis entre módulos, serviços e backend."
+    },
+    {
+     "pasta": "skills/frontend-ui-engineering",
+     "area": "programacao",
+     "descricao": "Engenharia de interfaces web: páginas e telas acessíveis, responsivas e com qualidade de produção."
+    },
+    {
+     "pasta": "skills/code-review-and-quality",
+     "area": "programacao",
+     "descricao": "Revisão de código em vários eixos (correção, clareza, segurança, desempenho) antes de integrar uma mudança."
+    },
+    {
+     "pasta": "skills/git-workflow-and-versioning",
+     "area": "programacao",
+     "descricao": "Fluxo de trabalho com git: commits, ramos, conflitos e versionamento."
+    },
+    {
+     "pasta": "skills/performance-optimization",
+     "area": "programacao",
+     "descricao": "Otimização de desempenho de frontend, backend, consultas e banco de dados."
+    },
+    {
+     "pasta": "skills/documentation-and-adrs",
+     "area": "programacao",
+     "descricao": "Documentação técnica e registro de decisões de arquitetura."
+    },
+    {
+     "pasta": "skills/security-and-hardening",
+     "area": "seguranca",
+     "descricao": "Segurança do código: validar entradas, proteger autenticação, segredos e dados de usuários contra vulnerabilidades."
+    },
+    {
+     "pasta": "skills/ci-cd-and-automation",
+     "area": "infraestrutura",
+     "descricao": "Integração e entrega contínuas: montar e ajustar pipelines de build, teste e deploy automático."
+    },
+    {
+     "pasta": "skills/observability-and-instrumentation",
+     "area": "infraestrutura",
+     "descricao": "Observabilidade: registros, métricas e rastreamento para monitorar o comportamento em produção."
+    },
+    {
+     "pasta": "skills/shipping-and-launch",
+     "area": "infraestrutura",
+     "descricao": "Lançamento em produção: lista de verificação do que precisa estar pronto antes de publicar o sistema."
+    }
+   ]
+  },
+  {
+   "origem": "https://github.com/anthropics/skills",
+   "ramo": "main",
+   "licenca": "Apache-2.0",
+   "itens": [
+    {
+     "pasta": "skills/frontend-design",
+     "area": "programacao",
+     "descricao": "Design visual de interfaces: criar telas e páginas com identidade própria, evitando aparência genérica."
+    },
+    {
+     "pasta": "skills/webapp-testing",
+     "area": "programacao",
+     "descricao": "Teste de aplicações web locais com Playwright: verificar telas, capturar imagens e ler erros do navegador."
+    },
+    {
+     "pasta": "skills/mcp-builder",
+     "area": "programacao",
+     "descricao": "Criar servidores MCP para integrar APIs e serviços externos como ferramentas de agentes."
+    },
+    {
+     "pasta": "skills/pdf",
+     "area": "dados",
+     "descricao": "Arquivos PDF: extrair texto e tabelas, juntar, dividir, preencher formulários e criar documentos PDF."
+    },
+    {
+     "pasta": "skills/docx",
+     "area": "dados",
+     "descricao": "Documentos Word (.docx): criar, ler e editar contratos, relatórios e propostas."
+    },
+    {
+     "pasta": "skills/xlsx",
+     "area": "dados",
+     "descricao": "Planilhas (.xlsx e .csv): criar, ler e editar, com fórmulas, formatação e gráficos."
+    },
+    {
+     "pasta": "skills/pptx",
+     "area": "dados",
+     "descricao": "Apresentações de slides (.pptx): criar e editar."
+    },
+    {
+     "pasta": "skills/canvas-design",
+     "area": "midia",
+     "descricao": "Design gráfico estático: cartazes, artes, capas e imagens em PNG e PDF a partir de uma filosofia de design."
+    },
+    {
+     "pasta": "skills/algorithmic-art",
+     "area": "midia",
+     "descricao": "Arte generativa com p5.js: padrões, campos de fluxo e sistemas de partículas."
+    },
+    {
+     "pasta": "skills/theme-factory",
+     "area": "midia",
+     "descricao": "Temas prontos de cores e fontes para páginas, documentos e apresentações."
+    },
+    {
+     "pasta": "skills/slack-gif-creator",
+     "area": "midia",
+     "descricao": "Criar GIFs animados otimizados (tamanho, quadros e cores)."
+    }
+   ]
+  },
+  {
+   "origem": "https://github.com/vercel-labs/agent-skills",
+   "ramo": "main",
+   "licenca": "MIT",
+   "itens": [
+    {
+     "pasta": "skills/react-best-practices",
+     "area": "programacao",
+     "descricao": "Boas práticas de desempenho para React e Next.js."
+    },
+    {
+     "pasta": "skills/web-design-guidelines",
+     "area": "programacao",
+     "descricao": "Auditar o código de uma interface web contra mais de cem regras de acessibilidade, desempenho e usabilidade."
+    },
+    {
+     "pasta": "skills/composition-patterns",
+     "area": "programacao",
+     "descricao": "Padrões de composição de componentes React que escalam."
+    }
+   ]
+  },
+  {
+   "origem": "https://github.com/remotion-dev/skills",
+   "ramo": "main",
+   "licenca": "não declarada no repositório; o Remotion tem licença própria (leia remotion-license)",
+   "itens": [
+    {
+     "pasta": "skills/remotion-best-practices",
+     "area": "midia",
+     "descricao": "Vídeo e motion graphics por código com Remotion: ponto de entrada que indica qual habilidade do Remotion usar."
+    },
+    {
+     "pasta": "skills/remotion-create",
+     "area": "midia",
+     "descricao": "Criar um projeto e uma composição de vídeo no Remotion."
+    },
+    {
+     "pasta": "skills/remotion-markup",
+     "area": "midia",
+     "descricao": "Remotion: animações, layout, tipografia, mídia, efeitos, áudio e temporização de vídeo."
+    },
+    {
+     "pasta": "skills/remotion-render",
+     "area": "midia",
+     "descricao": "Renderizar um vídeo ou imagem do Remotion pela linha de comando."
+    },
+    {
+     "pasta": "skills/remotion-captions",
+     "area": "midia",
+     "descricao": "Remotion: transcrever, exibir e animar legendas no vídeo."
+    },
+    {
+     "pasta": "skills/remotion-docs",
+     "area": "midia",
+     "descricao": "Consultar a documentação atual do Remotion."
+    },
+    {
+     "pasta": "skills/remotion-license",
+     "area": "midia",
+     "descricao": "Regras de licença do Remotion: quando o uso é gratuito e quando exige licença paga."
+    },
+    {
+     "pasta": "skills/remotion-multimedia",
+     "area": "midia",
+     "descricao": "Remotion: obter metadados e manipular arquivos de vídeo e áudio."
+    }
+   ]
+  },
+  {
+   "origem": "https://github.com/trailofbits/skills",
+   "ramo": "main",
+   "licenca": "CC-BY-SA-4.0",
+   "itens": [
+    {
+     "pasta": "plugins/supply-chain-risk-auditor/skills/supply-chain-risk-auditor",
+     "area": "seguranca",
+     "descricao": "Auditar as dependências do projeto (npm, PyPI, Go): vulnerabilidades conhecidas, pacotes abandonados e riscos de cadeia de suprimentos."
+    },
+    {
+     "pasta": "plugins/differential-review/skills/differential-review",
+     "area": "seguranca",
+     "descricao": "Revisão de segurança das mudanças de código, usando o histórico do git."
+    },
+    {
+     "pasta": "plugins/sharp-edges/skills/sharp-edges",
+     "area": "seguranca",
+     "descricao": "Identificar no código APIs propensas a erro, configurações perigosas e armadilhas de segurança."
+    }
+   ]
+  },
+  {
+   "origem": "https://github.com/coreyhaines31/marketingskills",
+   "ramo": "main",
+   "licenca": "MIT",
+   "itens": [
+    {
+     "pasta": "skills/product-marketing",
+     "area": "marketing",
+     "descricao": "Documento base de posicionamento e público do produto, usado pelas demais habilidades de marketing."
+    },
+    {
+     "pasta": "skills/marketing-plan",
+     "area": "marketing",
+     "descricao": "Plano completo de marketing e de entrada no mercado."
+    },
+    {
+     "pasta": "skills/marketing-ideas",
+     "area": "marketing",
+     "descricao": "Ideias e táticas de crescimento para um produto de software."
+    },
+    {
+     "pasta": "skills/launch",
+     "area": "marketing",
+     "descricao": "Planejar o lançamento de um produto ou funcionalidade: preparação, anúncio e acompanhamento."
+    },
+    {
+     "pasta": "skills/pricing",
+     "area": "marketing",
+     "descricao": "Definir preços e planos: quanto cobrar e como empacotar."
+    },
+    {
+     "pasta": "skills/copywriting",
+     "area": "marketing",
+     "descricao": "Escrever ou reescrever o texto de páginas (inicial, de venda, de preços, de funcionalidades)."
+    },
+    {
+     "pasta": "skills/copy-editing",
+     "area": "marketing",
+     "descricao": "Revisar, enxugar e melhorar textos existentes."
+    },
+    {
+     "pasta": "skills/content-strategy",
+     "area": "marketing",
+     "descricao": "Estratégia de conteúdo: decidir o que publicar e quais temas priorizar."
+    },
+    {
+     "pasta": "skills/seo-audit",
+     "area": "marketing",
+     "descricao": "Auditoria de SEO: diagnosticar por que uma página não aparece ou caiu nos buscadores."
+    },
+    {
+     "pasta": "skills/ai-seo",
+     "area": "marketing",
+     "descricao": "Fazer o produto ser citado e recomendado por assistentes de IA e buscadores com respostas geradas."
+    },
+    {
+     "pasta": "skills/programmatic-seo",
+     "area": "marketing",
+     "descricao": "Páginas de SEO em escala a partir de modelos e dados."
+    },
+    {
+     "pasta": "skills/schema",
+     "area": "marketing",
+     "descricao": "Dados estruturados (JSON-LD) para páginas: escolher o tipo, escrever e validar."
+    },
+    {
+     "pasta": "skills/site-architecture",
+     "area": "marketing",
+     "descricao": "Planejar a estrutura de páginas e a navegação de um site."
+    },
+    {
+     "pasta": "skills/cro",
+     "area": "marketing",
+     "descricao": "Aumentar a conversão de páginas e formulários."
+    },
+    {
+     "pasta": "skills/onboarding",
+     "area": "marketing",
+     "descricao": "Melhorar a ativação e os primeiros passos de novos usuários no produto."
+    },
+    {
+     "pasta": "skills/emails",
+     "area": "marketing",
+     "descricao": "Sequências automáticas de e-mail para quem se cadastrou no produto."
+    },
+    {
+     "pasta": "skills/analytics",
+     "area": "marketing",
+     "descricao": "Configurar e auditar a medição de indicadores do site e do produto."
+    },
+    {
+     "pasta": "skills/customer-research",
+     "area": "marketing",
+     "descricao": "Pesquisa com clientes: coletar e sintetizar avaliações, citações e entrevistas."
+    },
+    {
+     "pasta": "skills/competitors",
+     "area": "marketing",
+     "descricao": "Páginas de comparação com concorrentes e de alternativa a um produto."
+    },
+    {
+     "pasta": "skills/free-tools",
+     "area": "marketing",
+     "descricao": "Planejar ferramentas gratuitas como forma de atrair usuários."
+    },
+    {
+     "pasta": "skills/referrals",
+     "area": "marketing",
+     "descricao": "Programas de indicação e de afiliados."
+    },
+    {
+     "pasta": "skills/churn-prevention",
+     "area": "marketing",
+     "descricao": "Reduzir cancelamentos e reter clientes."
+    },
+    {
+     "pasta": "skills/directory-submissions",
+     "area": "marketing",
+     "descricao": "Cadastrar o produto em diretórios de startups, SaaS e ferramentas de IA."
+    },
+    {
+     "pasta": "skills/public-relations",
+     "area": "marketing",
+     "descricao": "Conseguir cobertura de imprensa e relacionamento com jornalistas."
+    },
+    {
+     "pasta": "skills/aso",
+     "area": "marketing",
+     "descricao": "Otimizar a página de um aplicativo nas lojas (título, palavras-chave, imagens)."
+    },
+    {
+     "pasta": "skills/lead-magnets",
+     "area": "marketing",
+     "descricao": "Materiais gratuitos oferecidos em troca de cadastro."
+    },
+    {
+     "pasta": "skills/link-building",
+     "area": "marketing",
+     "descricao": "Conseguir links e menções que melhoram o posicionamento nos buscadores."
+    },
+    {
+     "pasta": "skills/marketing-psychology",
+     "area": "marketing",
+     "descricao": "Princípios de psicologia aplicados a marketing e decisão de compra."
+    },
+    {
+     "pasta": "skills/social",
+     "area": "social",
+     "descricao": "Conteúdo orgânico para redes sociais: LinkedIn, X, Instagram, TikTok e Facebook."
+    },
+    {
+     "pasta": "skills/community-marketing",
+     "area": "social",
+     "descricao": "Construir e fazer crescer uma comunidade online em torno do produto."
+    },
+    {
+     "pasta": "skills/influencer-marketing",
+     "area": "social",
+     "descricao": "Parcerias com criadores de conteúdo e influenciadores."
+    },
+    {
+     "pasta": "skills/video",
+     "area": "midia",
+     "descricao": "Vídeos de marketing: escolher a abordagem (gravação de tela, código, IA) e roteirizar."
+    },
+    {
+     "pasta": "skills/image",
+     "area": "midia",
+     "descricao": "Imagens de marketing: criar, editar e otimizar."
+    }
+   ]
+  },
+  {
+   "origem": "https://github.com/heygen-com/hyperframes",
+   "ramo": "main",
+   "licenca": "Apache-2.0",
+   "itens": [
+    {
+     "pasta": "skills/hyperframes",
+     "area": "midia",
+     "descricao": "Vídeo e motion graphics a partir de HTML com HyperFrames (código aberto, sem taxa por uso): leia primeiro para criar, editar, animar ou renderizar vídeos, legendas e sobreposições."
+    },
+    {
+     "pasta": "skills/hyperframes-cli",
+     "area": "midia",
+     "descricao": "HyperFrames: linha de comando para criar o projeto, conferir quadros, editar a linha do tempo, pré-visualizar e renderizar em MP4."
+    },
+    {
+     "pasta": "skills/hyperframes-registry",
+     "area": "midia",
+     "descricao": "HyperFrames: cerca de 450 blocos prontos e editáveis (transições, títulos, tipografia animada, legendas, gráficos, mapas, 3D)."
+    },
+    {
+     "pasta": "skills/media-use",
+     "area": "midia",
+     "descricao": "HyperFrames: obter ou produzir a mídia de um vídeo (música, efeitos sonoros, imagens, ícones, narração, transcrições, recortes)."
+    },
+    {
+     "pasta": "skills/style-sampling",
+     "area": "midia",
+     "descricao": "HyperFrames: produzir um vídeo explicativo em um de cinco estilos prontos (colagem, finanças, ciência animada, marca em 3D, crime real)."
+    },
+    {
+     "pasta": "skills/slideshow",
+     "area": "midia",
+     "descricao": "HyperFrames: apresentação de slides interativa em HTML, com revelações, navegação e modo apresentador."
+    }
+   ]
+  },
+  {
+   "origem": "https://github.com/higgsfield-ai/skills",
+   "ramo": "main",
+   "licenca": "MIT",
+   "itens": [
+    {
+     "pasta": "higgsfield-generate",
+     "area": "midia",
+     "descricao": "Higgsfield: gerar imagem, vídeo, 3D e áudio por IA com dezenas de modelos, pela linha de comando do Higgsfield. Serviço externo pago por créditos: use só com conta ou cartão fornecidos pelo dono."
+    },
+    {
+     "pasta": "higgsfield-product-photoshoot",
+     "area": "midia",
+     "descricao": "Higgsfield: fotos de produto com qualidade de estúdio em vários estilos. Serviço externo pago por créditos: use só com conta ou cartão fornecidos pelo dono."
+    },
+    {
+     "pasta": "higgsfield-brandkit",
+     "area": "midia",
+     "descricao": "Higgsfield: criar ou ampliar uma identidade visual completa (paleta, logotipo em SVG, tipografia, aplicações). Serviço externo pago por créditos: use só com conta ou cartão fornecidos pelo dono."
+    },
+    {
+     "pasta": "higgsfield-marketplace-cards",
+     "area": "midia",
+     "descricao": "Higgsfield: imagens de produto para lojas e marketplaces (imagem principal, secundárias e módulos de conteúdo). Serviço externo pago por créditos: use só com conta ou cartão fornecidos pelo dono."
+    },
+    {
+     "pasta": "higgsfield-youtube-thumbnail",
+     "area": "midia",
+     "descricao": "Higgsfield: miniaturas de vídeo para YouTube. Serviço externo pago por créditos: use só com conta ou cartão fornecidos pelo dono."
+    },
+    {
+     "pasta": "higgsfield-faceless-video",
+     "area": "midia",
+     "descricao": "Higgsfield: vídeos sem apresentador (explicativos, histórias, documentários). Serviço externo pago por créditos: use só com conta ou cartão fornecidos pelo dono."
+    },
+    {
+     "pasta": "higgsfield-video-explainer",
+     "area": "midia",
+     "descricao": "Higgsfield: vídeo explicativo narrado. Serviço externo pago por créditos: use só com conta ou cartão fornecidos pelo dono."
+    },
+    {
+     "pasta": "higgsfield-websites",
+     "area": "programacao",
+     "descricao": "Higgsfield: criar, editar e publicar sites completos pela plataforma Higgsfield. Serviço externo pago por créditos: use só com conta ou cartão fornecidos pelo dono."
+    },
+    {
+     "pasta": "higgsfield-soul-id",
+     "area": "midia",
+     "descricao": "Higgsfield: treinar um personagem com rosto consistente para gerações futuras. Só com personagens fictícios ou rostos com autorização escrita. Serviço externo pago por créditos: use só com conta ou cartão fornecidos pelo dono."
+    }
+   ]
+  },
+  {
+   "origem": "https://github.com/goul4rt/lgpd-skills",
+   "ramo": "main",
+   "licenca": "MIT",
+   "itens": [
+    {
+     "pasta": "skills/lgpd-audit",
+     "area": "privacidade",
+     "descricao": "LGPD, ponto de entrada: orquestra a auditoria de privacidade do código e a adequação à lei, chamando as demais habilidades lgpd."
+    },
+    {
+     "pasta": "skills/lgpd-data-mapping",
+     "area": "privacidade",
+     "descricao": "LGPD: inventário de dados pessoais (fluxos, tabelas, cookies, SDKs, telemetria) e papel de cada terceiro."
+    },
+    {
+     "pasta": "skills/lgpd-legal-basis",
+     "area": "privacidade",
+     "descricao": "LGPD: escolher e documentar a base legal de cada atividade de tratamento, incluindo legítimo interesse."
+    },
+    {
+     "pasta": "skills/lgpd-dpo-encarregado",
+     "area": "privacidade",
+     "descricao": "LGPD: designar o encarregado de dados ou aplicar a dispensa para agentes de pequeno porte, com canal de contato."
+    },
+    {
+     "pasta": "skills/lgpd-ropa",
+     "area": "privacidade",
+     "descricao": "LGPD: registro das operações de tratamento de dados pessoais (Art. 37)."
+    },
+    {
+     "pasta": "skills/lgpd-ripd",
+     "area": "privacidade",
+     "descricao": "LGPD: relatório de impacto à proteção de dados pessoais (Art. 38), inclusive riscos de IA."
+    },
+    {
+     "pasta": "skills/lgpd-consent-schema",
+     "area": "privacidade",
+     "descricao": "LGPD: modelo de banco de dados para registrar consentimentos e revogações de forma auditável."
+    },
+    {
+     "pasta": "skills/lgpd-dsar",
+     "area": "privacidade",
+     "descricao": "LGPD: atender os direitos do titular (acesso, correção, exclusão, portabilidade) com rotas e prazos."
+    },
+    {
+     "pasta": "skills/lgpd-privacy-policy",
+     "area": "privacidade",
+     "descricao": "LGPD: redigir e versionar a política de privacidade com os itens obrigatórios do Art. 9."
+    },
+    {
+     "pasta": "skills/lgpd-incident-response",
+     "area": "privacidade",
+     "descricao": "LGPD: resposta a incidente de segurança com dados pessoais, prazos e comunicação à ANPD."
+    },
+    {
+     "pasta": "skills/lgpd-vendor-audit",
+     "area": "privacidade",
+     "descricao": "LGPD: classificar fornecedores (operador ou controlador) e avaliar o risco de cada um."
+    },
+    {
+     "pasta": "skills/lgpd-dpa",
+     "area": "privacidade",
+     "descricao": "LGPD: estruturar e revisar contratos de tratamento de dados com operadores."
+    },
+    {
+     "pasta": "skills/lgpd-international-transfer",
+     "area": "privacidade",
+     "descricao": "LGPD: transferência internacional de dados (adequação e cláusulas-padrão)."
+    },
+    {
+     "pasta": "skills/lgpd-audit-logging",
+     "area": "privacidade",
+     "descricao": "LGPD: registro de auditoria à prova de adulteração para operações com dados pessoais."
+    },
+    {
+     "pasta": "skills/lgpd-encryption-keys",
+     "area": "privacidade",
+     "descricao": "LGPD: criptografia em trânsito e em repouso, e gestão de chaves."
+    },
+    {
+     "pasta": "skills/lgpd-anonymization",
+     "area": "privacidade",
+     "descricao": "LGPD: anonimização e pseudonimização de dados pessoais."
+    },
+    {
+     "pasta": "skills/lgpd-retention-erasure",
+     "area": "privacidade",
+     "descricao": "LGPD: prazos de guarda, bloqueio e eliminação de dados, inclusive em cópias de segurança."
+    },
+    {
+     "pasta": "skills/lgpd-eca-digital-minors",
+     "area": "privacidade",
+     "descricao": "ECA Digital e LGPD: obrigações de produtos acessados por crianças e adolescentes."
+    },
+    {
+     "pasta": "skills/lgpd-legacy-retrofit",
+     "area": "privacidade",
+     "descricao": "LGPD: levantar no código existente as lacunas de privacidade e montar um plano priorizado de adequação."
+    }
+   ]
+  },
+  {
+   "origem": "https://github.com/lgpd-app/skills",
+   "ramo": "main",
+   "licenca": "Apache-2.0",
+   "itens": [
+    {
+     "pasta": "skills/lgpd-check",
+     "area": "privacidade",
+     "descricao": "LGPD: auditar um site (política de privacidade, cookies, minimização, direitos do titular) e gerar relatório com nota e correções."
+    },
+    {
+     "pasta": "skills/lgpd-md",
+     "area": "privacidade",
+     "descricao": "LGPD: gerar e validar o arquivo lgpd.md, declaração aberta de conformidade do site."
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,22 @@
+# Unidade systemd da Empresa Automática.
+# O script deploy/instalar-servico.sh preenche USUARIO e CAMINHO e instala este arquivo.
+[Unit]
+Description=Empresa Automática (agente autônomo)
+After=network-online.target ollama.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=USUARIO
+WorkingDirectory=CAMINHO
+ExecStart=CAMINHO/.venv/bin/python -m empresa_auto
+Restart=always
+RestartSec=10
+TimeoutStopSec=60
+Environment=PYTHONUNBUFFERED=1
+# Para liberar o painel na rede local (com token), acrescente ao ExecStart: --host 0.0.0.0
+# Para proteger o cofre com senha própria, crie um arquivo com EA_SENHA_MESTRA=... e aponte aqui:
+# EnvironmentFile=/etc/empresa-auto.env
+
+[Install]
+WantedBy=multi-user.target
